@@ -28,7 +28,7 @@ public final class Roll {
     }
 
     if (dicesRolled.size() == 5) {
-      throw new IllegalStateException("Five dices have already been added to the roll.");
+      throw new IllegalStateException("Cannot add more than five dices to the roll.");
     }
 
     dicesRolled.add(Integer.valueOf(numberOnDice));
@@ -46,18 +46,33 @@ public final class Roll {
       throw new IllegalStateException("an insufficient number of dice has been added to the roll");
     }
 
-    return -1;
+    return rule.apply(this);
+  }
+
+  /**
+   * Counts the total of dices with the same number in the roll.
+   * @param diceNumber number on the dice
+   * @return the total of dices with the same number in the roll
+   */
+  int countSameOf(int diceNumber) {
+    int sum = 0;
+    for (Integer rolledDice : dicesRolled) {
+      if (rolledDice.equals(diceNumber)) {
+        ++sum;
+      }
+    }
+    return sum;
   }
 
   interface Rule {
-    int apply();
+    int apply(Roll roll);
   }
 
-  static class DicesHaveTheSameNumberRule implements Rule {
+  static class SameOf implements Rule {
     private int diceNumber;
-    DicesHaveTheSameNumberRule(int diceNumber) { this.diceNumber = diceNumber; }
-     public int apply() {
-      return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    SameOf(int diceNumber) { this.diceNumber = diceNumber; }
+     public int apply(Roll roll) {
+      return roll.countSameOf(this.diceNumber);
     }
   }
 }

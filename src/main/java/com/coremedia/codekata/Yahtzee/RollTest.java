@@ -2,6 +2,8 @@ package com.coremedia.codekata.Yahtzee;
 
 import org.junit.Test;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Created with IntelliJ IDEA.
  * User: khoelsch
@@ -28,7 +30,15 @@ public class RollTest {
 
   @Test(expected = IllegalStateException.class)
   public void eval_insufficientDicesAdded() {
-    new Roll().add(1).add(2).add(3).add(4).eval(new Roll.DicesHaveTheSameNumberRule(1)); // Rule type does not matter here
+    new Roll().add(1).add(2).add(3).add(4)
+            .eval(new Roll.SameOf(1)); // Rule type does not matter here
   }
 
+  @Test
+  public void eval_sameDices() {
+    final Roll.SameOf rule = new Roll.SameOf(1);
+    int result = new Roll().add(1).add(1).add(1).add(1).add(1)
+            .eval(rule);
+    assertEquals(5, result);
+  }
 }
